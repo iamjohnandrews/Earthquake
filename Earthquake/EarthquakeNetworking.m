@@ -9,8 +9,9 @@
 #import "EarthquakeNetworking.h"
 #import <AFNetworking/AFNetworking.h>
 #import "Earthquake.h"
+#import <RaptureXML/RXMLElement.h>
 
-NSString * const EarthquakeRSSFeed = @"ba09703c363c9c64279b1a1f4a2d196a";
+NSString * const EarthquakeRSSFeed = @"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.atom";
 
 
 @interface EarthquakeNetworking ()
@@ -32,15 +33,17 @@ NSString * const EarthquakeRSSFeed = @"ba09703c363c9c64279b1a1f4a2d196a";
     return sharedManager;
 }
 
-- (void)getEarthquakeData
+- (NSArray *)getEarthquakeData
 {
+    __block NSArray *earquakesArray;
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:EarthquakeRSSFeed]];
     AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     requestOperation.responseSerializer = [AFXMLParserResponseSerializer serializer];
     
     [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Receieved %lu bytes of XML data.", (unsigned long)[(NSData *)responseObject length]);
-        [self parseEarthquakeRssResponse:responseObject];
+        earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeRssResponse:responseObject]];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", [error localizedDescription]);
@@ -48,21 +51,24 @@ NSString * const EarthquakeRSSFeed = @"ba09703c363c9c64279b1a1f4a2d196a";
     
     [requestOperation start];
     
+    return earquakesArray;
 }
 
-- (void)parseEarthquakeRssResponse:(NSData *)data
+- (NSMutableArray *)parseEarthquakeRssResponse:(NSData *)data
 {
     RXMLElement *rootElement = [RXMLElement elementFromXMLData:data];
     
-    NSMutableArray *feedItems = [NSMutableArray array];
+    NSMutableArray *earthquakeItems = [NSMutableArray array];
+    
     [rootElement iterateWithRootXPath:@"//item"
                            usingBlock:^(RXMLElement *rssItem) {
                                RSSFeedItem *newItem = [[RSSFeedItem alloc] init];
                                newItem.itemTitle = [[rssItem child:@"title"] text];
                                newItem.itemDescription = [[rssItem child:@"description"] text];
                                newItem.itemUrl = [[rssItem child:@"link"] text];
-                               [feedItems addObject:newItem];
+                               [earthquakeItems addObject:newItem];
                            }];
+    return earthquakeItems;
 }
 
 @end

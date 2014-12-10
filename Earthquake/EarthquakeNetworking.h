@@ -10,6 +10,6 @@
 
 @interface EarthquakeNetworking : NSObject
 + (instancetype) sharedManager;
-- (void)getEarthquakeData;
+- (NSArray *)getEarthquakeData;
 
 @end
