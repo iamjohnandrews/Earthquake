@@ -9,11 +9,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Earthquake-RaptureXML.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-Earthquake.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +17,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0E1EF0DE962AFA502FC98866</key>
+		<key>3FECC96EF93A6D99728CA07E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9C6C78DB0D2008B444959401</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FA1715CAF2A64F1987BA5707</key>
+		<key>60F0B48F36000F9DC47DA757</key>
 		<dict>
 			<key>primary</key>
 			<true/>

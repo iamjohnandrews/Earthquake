@@ -11,9 +11,9 @@
 #import "Earthquake.h"
 #import <RaptureXML/RXMLElement.h>
 
-NSString * const EarthquakeAPI = @"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.atom";
+NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/query?";
 
-//http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2011-12-04&endtime=2014-12-04&minmagnitude=6
+
 
 @interface EarthquakeNetworking ()
 @property (strong, nonatomic) AFHTTPSessionManager *session;
@@ -34,29 +34,28 @@ NSString * const EarthquakeAPI = @"http://earthquake.usgs.gov/earthquakes/feed/v
     return sharedManager;
 }
 
-- (NSArray *)getEarthquakeData
+- (NSArray *)fetchEarthquakeDataFrom:(NSDate *)startDate to:(NSDate *)endDate forMagnitudeOf:(NSNumber *)magnitude
 {
     __block NSArray *earquakesArray;
-   
+
+    NSDictionary *params = @{@"format" : @"geojson",
+                             @"starttime" : startDate,
+                             @"endtime" : endDate,
+                             @"minmagnitude" : magnitude};
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:EarthquakeAPI]];
-    AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    requestOperation.responseSerializer = [AFXMLParserResponseSerializer serializer];
-    
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Receieved %lu bytes of XML data.", (unsigned long)[(NSData *)responseObject length]);
-        NSError *jsonError = nil;
-        
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseObject
-                                                                 options:kNilOptions
-                                                                   error:&jsonError];
-        earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:jsonDict]];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", [error localizedDescription]);
-    }];
-    
-    [requestOperation start];
+    [self.session GET:EarthquakeAPI
+   parameters:params
+      success:^(NSURLSessionDataTask *task, id responseObject) {
+          NSError *jsonError = nil;
+          
+          NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                   options:kNilOptions
+                                                                     error:&jsonError];
+          earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:jsonDict]];
+          
+      } failure:^(NSURLSessionDataTask *task, NSError *error) {
+          NSLog(@"%@", [error localizedDescription]);
+      }];
     
     return earquakesArray;
 }

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FA1715CAF2A64F1987BA5707"
+               BlueprintIdentifier = "60F0B48F36000F9DC47DA757"
                BuildableName = "libPods-Earthquake-AFNetworking.a"
                BlueprintName = "Pods-Earthquake-AFNetworking"
                ReferencedContainer = "container:Pods.xcodeproj">
