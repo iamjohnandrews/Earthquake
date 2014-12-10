@@ -10,29 +10,29 @@
 	<string>Earthquake</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>824032027D5F8F566CDE068171471D59EBEFF068</key>
-		<string>github.com:iamjohnandrews/Earthquakes.git</string>
+		<key>F6CEC919AD561075E5F2B46E5BE12E7B98D517F5</key>
+		<string>github.com:iamjohnandrews/Earthquake.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Earthquake/Earthquake.xcworkspace</string>
+	<string>Earthquake.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>824032027D5F8F566CDE068171471D59EBEFF068</key>
-		<string>../..</string>
+		<key>F6CEC919AD561075E5F2B46E5BE12E7B98D517F5</key>
+		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:iamjohnandrews/Earthquakes.git</string>
+	<string>github.com:iamjohnandrews/Earthquake.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>824032027D5F8F566CDE068171471D59EBEFF068</string>
+	<string>F6CEC919AD561075E5F2B46E5BE12E7B98D517F5</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>824032027D5F8F566CDE068171471D59EBEFF068</string>
+			<string>F6CEC919AD561075E5F2B46E5BE12E7B98D517F5</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Earthquake</string>
 		</dict>

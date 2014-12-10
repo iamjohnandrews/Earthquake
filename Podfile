@@ -3,7 +3,6 @@
 
 target "Earthquake" do
 pod 'AFNetworking', '~> 2.5.0'
-pod 'RaptureXML'
 
 end
 

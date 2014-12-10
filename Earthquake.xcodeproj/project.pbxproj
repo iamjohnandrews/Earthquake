@@ -33,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		36A98C48917F406FBD9CEB87 /* libPods-Earthquake.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Earthquake.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		725BCDF33F37F8CC7A72C0F9 /* Pods-Earthquake.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Earthquake.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Earthquake/Pods-Earthquake.debug.xcconfig"; sourceTree = "<group>"; };
 		7F441A3D1A337A9300E9E952 /* EarthquakeNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EarthquakeNetworking.h; sourceTree = "<group>"; };
 		7F441A3E1A337A9300E9E952 /* EarthquakeNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EarthquakeNetworking.m; sourceTree = "<group>"; };
 		7F441A411A3380E900E9E952 /* Earthquake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Earthquake.h; sourceTree = "<group>"; };
@@ -53,7 +54,7 @@
 		7FA745991A313635009865A5 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		7FA7459A1A313635009865A5 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		7FA7459D1A31367B009865A5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		E551D2A4E7154C96B9A64BD2 /* Pods-Earthquake.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Earthquake.xcconfig"; path = "Pods/Pods-Earthquake.xcconfig"; sourceTree = "<group>"; };
+		E3D0F48C5C783B7494137EE2 /* Pods-Earthquake.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Earthquake.release.xcconfig"; path = "Pods/Target Support Files/Pods-Earthquake/Pods-Earthquake.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,8 +101,8 @@
 				7FA745721A30F4CF009865A5 /* Earthquake */,
 				7FA7458C1A30F4CF009865A5 /* EarthquakeTests */,
 				7FA745711A30F4CF009865A5 /* Products */,
-				E551D2A4E7154C96B9A64BD2 /* Pods-Earthquake.xcconfig */,
 				E79F65D8FE76476EA13379FD /* Frameworks */,
+				E4D56C6CB7E031BE1867221D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -165,6 +166,15 @@
 				7FA7457B1A30F4CF009865A5 /* DetailsViewController.m */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		E4D56C6CB7E031BE1867221D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				725BCDF33F37F8CC7A72C0F9 /* Pods-Earthquake.debug.xcconfig */,
+				E3D0F48C5C783B7494137EE2 /* Pods-Earthquake.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		E79F65D8FE76476EA13379FD /* Frameworks */ = {
@@ -286,7 +296,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-Earthquake-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Earthquake/Pods-Earthquake-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		88AB75E1538C4A83ADBD7453 /* Check Pods Manifest.lock */ = {
@@ -436,7 +446,7 @@
 		};
 		7FA745941A30F4CF009865A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E551D2A4E7154C96B9A64BD2 /* Pods-Earthquake.xcconfig */;
+			baseConfigurationReference = 725BCDF33F37F8CC7A72C0F9 /* Pods-Earthquake.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Earthquake/Info.plist;
@@ -447,7 +457,7 @@
 		};
 		7FA745951A30F4CF009865A5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E551D2A4E7154C96B9A64BD2 /* Pods-Earthquake.xcconfig */;
+			baseConfigurationReference = E3D0F48C5C783B7494137EE2 /* Pods-Earthquake.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Earthquake/Info.plist;

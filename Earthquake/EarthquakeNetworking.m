@@ -11,8 +11,9 @@
 #import "Earthquake.h"
 #import <RaptureXML/RXMLElement.h>
 
-NSString * const EarthquakeRSSFeed = @"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.atom";
+NSString * const EarthquakeAPI = @"http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.atom";
 
+//http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2011-12-04&endtime=2014-12-04&minmagnitude=6
 
 @interface EarthquakeNetworking ()
 @property (strong, nonatomic) AFHTTPSessionManager *session;
@@ -26,8 +27,8 @@ NSString * const EarthquakeRSSFeed = @"http://earthquake.usgs.gov/earthquakes/fe
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken,^{
         sharedManager = [[self alloc] init];
-        sharedManager.session = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:EarthquakeRSSFeed]];
-        sharedManager.session.responseSerializer = [AFXMLParserResponseSerializer serializer];
+        sharedManager.session = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:EarthquakeAPI]];
+        sharedManager.session.responseSerializer = [AFJSONResponseSerializer serializer];
     });
     
     return sharedManager;
@@ -36,14 +37,20 @@ NSString * const EarthquakeRSSFeed = @"http://earthquake.usgs.gov/earthquakes/fe
 - (NSArray *)getEarthquakeData
 {
     __block NSArray *earquakesArray;
+   
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:EarthquakeRSSFeed]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:EarthquakeAPI]];
     AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     requestOperation.responseSerializer = [AFXMLParserResponseSerializer serializer];
     
     [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Receieved %lu bytes of XML data.", (unsigned long)[(NSData *)responseObject length]);
-        earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeRssResponse:responseObject]];
+        NSError *jsonError = nil;
+        
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                 options:kNilOptions
+                                                                   error:&jsonError];
+        earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:jsonDict]];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", [error localizedDescription]);
@@ -54,21 +61,32 @@ NSString * const EarthquakeRSSFeed = @"http://earthquake.usgs.gov/earthquakes/fe
     return earquakesArray;
 }
 
-- (NSMutableArray *)parseEarthquakeRssResponse:(NSData *)data
+- (NSMutableArray *)parseEarthquakeResponse:(NSDictionary *)data
 {
-    RXMLElement *rootElement = [RXMLElement elementFromXMLData:data];
-    
     NSMutableArray *earthquakeItems = [NSMutableArray array];
+
+    NSArray *collectiveEarthquakesArray = [data objectForKey:@"features"];
     
-    [rootElement iterateWithRootXPath:@"//item"
-                           usingBlock:^(RXMLElement *rssItem) {
-                               RSSFeedItem *newItem = [[RSSFeedItem alloc] init];
-                               newItem.itemTitle = [[rssItem child:@"title"] text];
-                               newItem.itemDescription = [[rssItem child:@"description"] text];
-                               newItem.itemUrl = [[rssItem child:@"link"] text];
-                               [earthquakeItems addObject:newItem];
-                           }];
+    for (NSDictionary *IndividualEarthquakeDict in collectiveEarthquakesArray) {
+        NSDictionary *earthquakeStatsDict = [IndividualEarthquakeDict objectForKey:@"properties"];
+        Earthquake *earthquake = [[Earthquake alloc] init];
+        earthquake.magnitude = [earthquakeStatsDict objectForKey:@"mag"];
+        earthquake.place = [earthquakeStatsDict objectForKey:@"place"];
+        earthquake.dateAndTime = [earthquakeStatsDict objectForKey:@"time"];
+        earthquake.url = [earthquakeStatsDict objectForKey:@"url"];
+        earthquake.title = [earthquakeStatsDict objectForKey:@"title"];
+        
+        NSDictionary *earthquakeLocationDict = [IndividualEarthquakeDict objectForKey:@"geometry"];
+        NSArray *earthquakeCoordinatesArray = [earthquakeLocationDict objectForKey:@"coordinates"];
+        earthquake.longitude = [earthquakeCoordinatesArray firstObject];
+        earthquake.latitude = [earthquakeCoordinatesArray objectAtIndex:2];
+        
+        [earthquakeItems addObject:earthquake];
+    }
+
     return earthquakeItems;
 }
+
+
 
 @end
