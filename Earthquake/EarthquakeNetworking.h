@@ -10,6 +10,6 @@
 
 @interface EarthquakeNetworking : NSObject
 + (instancetype) sharedManager;
-- (NSArray *)fetchEarthquakeDataFrom:(NSDate *)startDate to:(NSDate *)endDate forMagnitudeOf:(NSNumber *)magnitude;
+- (NSArray *)fetchEarthquakeDataFrom:(NSString *)startDate to:(NSString *)endDate forMagnitudeOf:(NSNumber *)magnitude;
 
 @end

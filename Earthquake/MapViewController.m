@@ -7,12 +7,14 @@
 //
 
 #import "MapViewController.h"
+#import "Earthquake.h"
+#import "EarthquakeNetworking.h"
 
 
 @interface MapViewController ()
-@property (strong, nonatomic) NSMutableArray *hotelPinsArray;
+@property (strong, nonatomic) NSMutableArray *earthquakePinsArray;
 @property (strong, nonatomic) UIImage *originalImage;
-
+@property (strong, nonatomic) EarthquakeNetworking *networkingManger;
 @end
 
 @implementation MapViewController
@@ -21,31 +23,53 @@
 {
     [super viewDidLoad];
     
-    ListViewController *listVC = [[self.tabBarController viewControllers] firstObject];
-    self.hotelInfo = listVC.hotelInfo;
-    
+    self.networkingManger = [[EarthquakeNetworking alloc] init];
+    NSArray *initialMapViewPinsArray = [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
+                                                                                   to:[ self formateDate:[NSDate date]]
+                                                                       forMagnitudeOf:[NSNumber numberWithInt:5]];
     self.mapView.delegate = self;
     self.mapView.rotateEnabled = NO;
     
-    NSArray *mapAnnotations = [self convertHotelObjectsIntoCoordinates:self.hotelInfo];
+    NSArray *mapAnnotations = [self convertEarthquakeObjectsIntoCoordinates:initialMapViewPinsArray];
     [self.mapView addAnnotations:mapAnnotations];
     [self.mapView showAnnotations:mapAnnotations animated:YES];
 }
 
-
-- (NSArray *)convertHotelObjectsIntoCoordinates:(NSArray *)hotelObjects
+- (NSString *)formateDate:(NSDate *)date
 {
-    self.hotelPinsArray = [NSMutableArray array];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
     
-    for (Hotel *hotel in hotelObjects) {
-        MKPointAnnotation *myAnnotation = [[MKPointAnnotation alloc] init];
-        myAnnotation.coordinate = CLLocationCoordinate2DMake((CLLocationDegrees)[hotel.latitude doubleValue], (CLLocationDegrees)[hotel.longitude doubleValue]);
-        myAnnotation.title = hotel.name;
+    NSString *usgsDateStyle = [formatter stringFromDate:date];
+    
+    return usgsDateStyle;
+}
 
-        [self.hotelPinsArray addObject:myAnnotation];
+- (NSString *)getDateFromOneYearAgo:(NSDate *)today
+{
+    NSCalendar *currentCalendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+    [offsetComponents setYear:-1];
+    
+    NSDate *oneYearAgo = [currentCalendar dateByAddingComponents:offsetComponents toDate:today options:0];
+    
+    return [self formateDate:oneYearAgo];
+}
+
+- (NSArray *)convertEarthquakeObjectsIntoCoordinates:(NSArray *)earthquakeObjects
+{
+    self.earthquakePinsArray = [NSMutableArray array];
+    
+    for (Earthquake *earthquake in earthquakeObjects) {
+        MKPointAnnotation *myAnnotation = [[MKPointAnnotation alloc] init];
+        myAnnotation.coordinate = CLLocationCoordinate2DMake((CLLocationDegrees)[earthquake.latitude doubleValue], (CLLocationDegrees)[earthquake.longitude doubleValue]);
+        myAnnotation.title = earthquake.title;
+
+        [self.earthquakePinsArray addObject:myAnnotation];
     }
     
-    return (NSArray *)self.hotelPinsArray;
+    return (NSArray *)self.earthquakePinsArray;
 }
 
 #pragma MapKit Delegate methods
@@ -77,7 +101,7 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    NSInteger index = [self.hotelPinsArray indexOfObject:view.annotation];
+    NSInteger index = [self.earthquakePinsArray indexOfObject:view.annotation];
     Hotel *hotel = self.hotelInfo[index];
 
     if ([view.leftCalloutAccessoryView isKindOfClass:[UIImageView class]]) {
@@ -96,7 +120,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([sender isKindOfClass:[MKAnnotationView class]]) {
-        NSInteger index = [self.hotelPinsArray indexOfObject:((MKAnnotationView *)sender).annotation];
+        NSInteger index = [self.earthquakePinsArray indexOfObject:((MKAnnotationView *)sender).annotation];
         Hotel *hotel = self.hotelInfo[index];
         
         if([segue.identifier isEqualToString:@"MapToHotelDetailsSegue"]) {

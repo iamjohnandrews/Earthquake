@@ -9,11 +9,8 @@
 #import "EarthquakeNetworking.h"
 #import <AFNetworking/AFNetworking.h>
 #import "Earthquake.h"
-#import <RaptureXML/RXMLElement.h>
 
 NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/query?";
-
-
 
 @interface EarthquakeNetworking ()
 @property (strong, nonatomic) AFHTTPSessionManager *session;
@@ -34,7 +31,7 @@ NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/quer
     return sharedManager;
 }
 
-- (NSArray *)fetchEarthquakeDataFrom:(NSDate *)startDate to:(NSDate *)endDate forMagnitudeOf:(NSNumber *)magnitude
+- (NSArray *)fetchEarthquakeDataFrom:(NSString *)startDate to:(NSString *)endDate forMagnitudeOf:(NSNumber *)magnitude
 {
     __block NSArray *earquakesArray;
 
