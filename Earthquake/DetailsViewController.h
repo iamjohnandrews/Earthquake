@@ -16,5 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateAndTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *magnitudeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *placeLabel;
+@property (weak, nonatomic) IBOutlet UIButton *dismissModalButton;
+- (IBAction)dismissModalButtonPressed:(id)sender;
 
 @end

@@ -29,7 +29,7 @@
     
     [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
                                                 to:[self formateDate:[NSDate date]]
-                                    forMagnitudeOf:[NSNumber numberWithInt:6]
+                                    forMagnitudeOf:[NSNumber numberWithInt:4]
                                         completion:^(NSArray *data) {
                                             self.earthquakeObjectsArray = data;
                                         }];

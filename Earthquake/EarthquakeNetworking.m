@@ -23,7 +23,10 @@ NSString * const EarthquakeBaseQueryAPI = @"http://comcat.cr.usgs.gov/fdsnws/eve
     NSDictionary *parameters = @{@"starttime" : startDate,
                                  @"endtime" : endDate,
                                  @"minmagnitude" : magnitude,
-                                 @"format" : @"geojson"};
+                                 @"format" : @"geojson",
+                                 @"latitude" : @"35.462244",
+                                 @"longitude" : @"-97.384292",
+                                 @"maxradiuskm" : @"2000"};
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -31,14 +34,13 @@ NSString * const EarthquakeBaseQueryAPI = @"http://comcat.cr.usgs.gov/fdsnws/eve
     [manager GET:EarthquakeBaseQueryAPI
       parameters:parameters
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             NSLog(@"JSON: %@", responseObject);
      
              NSArray *earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:responseObject]];
              if (completion) {
                  completion(earquakesArray);
              }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"ERROR: %@", error);
     }];
     
 }
