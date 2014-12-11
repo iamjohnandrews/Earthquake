@@ -10,34 +10,16 @@
 #import <AFNetworking/AFNetworking.h>
 #import "Earthquake.h"
 
-NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/query?";
-
-@interface EarthquakeNetworking ()
-@property (strong, nonatomic) AFHTTPSessionManager *session;
-
-@end
+NSString * const EarthquakeBaseQueryAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&";
 
 @implementation EarthquakeNetworking
-
-+ (instancetype) sharedManager
-{
-    static EarthquakeNetworking *sharedManager;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken,^{
-        sharedManager = [[self alloc] init];
-//        sharedManager.session = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:EarthquakeAPI]];
-        sharedManager.session.responseSerializer = [AFJSONResponseSerializer serializer];
-        
-    });
-    
-    return sharedManager;
-}
 
 - (void)fetchEarthquakeDataFrom:(NSString *)startDate
                              to:(NSString *)endDate
                  forMagnitudeOf:(NSNumber *)magnitude
                      completion:(EarthquakeDataRequestCompletion)completion
 {
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:@"http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2011-12-04&endtime=2014-12-04&minmagnitude=6"
       parameters:nil

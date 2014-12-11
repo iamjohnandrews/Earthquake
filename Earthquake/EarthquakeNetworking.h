@@ -11,7 +11,7 @@
 typedef void (^EarthquakeDataRequestCompletion)(NSArray *data);
 
 @interface EarthquakeNetworking : NSObject
-+ (instancetype) sharedManager;
+
 - (void)fetchEarthquakeDataFrom:(NSString *)startDate
                              to:(NSString *)endDate
                  forMagnitudeOf:(NSNumber *)magnitude
