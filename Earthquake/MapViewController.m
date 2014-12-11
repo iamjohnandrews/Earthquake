@@ -9,10 +9,12 @@
 #import "MapViewController.h"
 #import "Earthquake.h"
 #import "EarthquakeNetworking.h"
+#import "DetailsViewController.h"
 
 
 @interface MapViewController ()
 @property (strong, nonatomic) NSMutableArray *earthquakePinsArray;
+@property (strong, nonatomic) NSArray *earthquakeObjectsArray;
 @property (strong, nonatomic) UIImage *originalImage;
 @property (strong, nonatomic) EarthquakeNetworking *networkingManger;
 @end
@@ -24,13 +26,13 @@
     [super viewDidLoad];
     
     self.networkingManger = [[EarthquakeNetworking alloc] init];
-    NSArray *initialMapViewPinsArray = [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
-                                                                                   to:[ self formateDate:[NSDate date]]
+    self.earthquakeObjectsArray = [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
+                                                                                   to:[self formateDate:[NSDate date]]
                                                                        forMagnitudeOf:[NSNumber numberWithInt:5]];
     self.mapView.delegate = self;
     self.mapView.rotateEnabled = NO;
     
-    NSArray *mapAnnotations = [self convertEarthquakeObjectsIntoCoordinates:initialMapViewPinsArray];
+    NSArray *mapAnnotations = [self convertEarthquakeObjectsIntoCoordinates:self.earthquakeObjectsArray];
     [self.mapView addAnnotations:mapAnnotations];
     [self.mapView showAnnotations:mapAnnotations animated:YES];
 }
@@ -76,13 +78,10 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    MKAnnotationView *aView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"hotel"];
+    MKAnnotationView *aView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"earthquake"];
     if (!aView) {
-        aView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"hotel"];
+        aView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"earthquake"];
         aView.canShowCallout = YES;
-        
-        UIImageView *hotelImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 46.0f, 46.0f)];
-        aView.leftCalloutAccessoryView = hotelImageView;
         
         UIButton* rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         aView.rightCalloutAccessoryView = rightButton;
@@ -95,25 +94,8 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    [self performSegueWithIdentifier:@"MapToHotelDetailsSegue" sender:view];
+    [self performSegueWithIdentifier:@"MapToEarthquakeDetailsSegue" sender:view];
 }
-
-
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
-{
-    NSInteger index = [self.earthquakePinsArray indexOfObject:view.annotation];
-    Hotel *hotel = self.hotelInfo[index];
-
-    if ([view.leftCalloutAccessoryView isKindOfClass:[UIImageView class]]) {
-        UIImageView *hotelImageView = (UIImageView *)view.leftCalloutAccessoryView;
-        [hotelImageView sd_setImageWithURL:[NSURL URLWithString:hotel.thumbnailURL]
-                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                     self.originalImage = image;
-                                     hotelImageView.image = self.originalImage;
-                                 }];
-    }
-}
-
 
 #pragma mark - Navigation
 
@@ -121,12 +103,11 @@
 {
     if ([sender isKindOfClass:[MKAnnotationView class]]) {
         NSInteger index = [self.earthquakePinsArray indexOfObject:((MKAnnotationView *)sender).annotation];
-        Hotel *hotel = self.hotelInfo[index];
+        Earthquake *earthquake = self.earthquakeObjectsArray[index];
         
-        if([segue.identifier isEqualToString:@"MapToHotelDetailsSegue"]) {
-            ModalHotelViewController *modalHotelVC = (ModalHotelViewController *)segue.destinationViewController;
-            modalHotelVC.selectedHotel = hotel;
-            modalHotelVC.originalImage = self.originalImage;
+        if([segue.identifier isEqualToString:@"MapToEarthquakeDetailsSegue"]) {
+            DetailsViewController *detailsVC = (DetailsViewController *)segue.destinationViewController;
+            detailsVC.selectedEarthquake = earthquake;
         }
     }
 }

@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Earthquake.h"
 
 @interface DetailsViewController : UIViewController
 
+@property (strong, nonatomic) Earthquake *selectedEarthquake;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateAndTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *magnitudeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *placeLabel;
 
 @end
-

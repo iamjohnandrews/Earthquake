@@ -14,14 +14,14 @@
 
 @implementation DetailsViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    self.titleLabel.text = self.selectedEarthquake.title;
+    self.dateAndTimeLabel.text = [self.selectedEarthquake.dateAndTime stringValue];
+    self.magnitudeLabel.text = [self.selectedEarthquake.magnitude stringValue];
+    self.placeLabel.text = self.selectedEarthquake.place;
 }
 
 @end
