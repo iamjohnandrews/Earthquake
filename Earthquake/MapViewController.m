@@ -26,12 +26,21 @@
     [super viewDidLoad];
     
     self.networkingManger = [[EarthquakeNetworking alloc] init];
-    self.earthquakeObjectsArray = [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
-                                                                                   to:[self formateDate:[NSDate date]]
-                                                                       forMagnitudeOf:[NSNumber numberWithInt:5]];
+
+    [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
+                                                to:[self formateDate:[NSDate date]]
+                                    forMagnitudeOf:[NSNumber numberWithInt:3]
+                                        completion:^(NSArray *data) {
+                                            self.earthquakeObjectsArray = data;
+                                        }];
+    
     self.mapView.delegate = self;
     self.mapView.rotateEnabled = NO;
-    
+}
+
+- (void)setEarthquakeObjectsArray:(NSArray *)earthquakeObjectsArray
+{
+    _earthquakeObjectsArray = earthquakeObjectsArray;
     NSArray *mapAnnotations = [self convertEarthquakeObjectsIntoCoordinates:self.earthquakeObjectsArray];
     [self.mapView addAnnotations:mapAnnotations];
     [self.mapView showAnnotations:mapAnnotations animated:YES];

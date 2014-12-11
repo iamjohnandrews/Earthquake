@@ -33,22 +33,25 @@ NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/quer
     return sharedManager;
 }
 
-- (NSArray *)fetchEarthquakeDataFrom:(NSString *)startDate to:(NSString *)endDate forMagnitudeOf:(NSNumber *)magnitude
+- (void)fetchEarthquakeDataFrom:(NSString *)startDate
+                             to:(NSString *)endDate
+                 forMagnitudeOf:(NSNumber *)magnitude
+                     completion:(EarthquakeDataRequestCompletion)completion
 {
-    __block NSArray *earquakesArray;
-    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:@"http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2011-12-04&endtime=2014-12-04&minmagnitude=6"
       parameters:nil
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
              NSLog(@"JSON: %@", responseObject);
              
-             earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:responseObject]];
+             NSArray *earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:responseObject]];
+             if (completion) {
+                 completion(earquakesArray);
+             }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
     
-    return earquakesArray;
 }
 
 - (NSMutableArray *)parseEarthquakeResponse:(NSDictionary *)data

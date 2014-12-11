@@ -20,12 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Earthquake/MapViewController.m"
-            timestampString = "439999218.896589"
+            timestampString = "440000608.477226"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "-convertEarthquakeObjectsIntoCoordinates:"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "-setEarthquakeObjectsArray:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

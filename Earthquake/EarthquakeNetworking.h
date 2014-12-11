@@ -8,8 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^EarthquakeDataRequestCompletion)(NSArray *data);
+
 @interface EarthquakeNetworking : NSObject
 + (instancetype) sharedManager;
-- (NSArray *)fetchEarthquakeDataFrom:(NSString *)startDate to:(NSString *)endDate forMagnitudeOf:(NSNumber *)magnitude;
+- (void)fetchEarthquakeDataFrom:(NSString *)startDate
+                             to:(NSString *)endDate
+                 forMagnitudeOf:(NSNumber *)magnitude
+                     completion:(EarthquakeDataRequestCompletion)completion;
 
 @end
