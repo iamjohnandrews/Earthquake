@@ -10,7 +10,8 @@
 #import <AFNetworking/AFNetworking.h>
 #import "Earthquake.h"
 
-NSString * const EarthquakeBaseQueryAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&";
+NSString * const EarthquakeBaseQueryAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/query?";
+
 
 @implementation EarthquakeNetworking
 
@@ -19,13 +20,19 @@ NSString * const EarthquakeBaseQueryAPI = @"http://comcat.cr.usgs.gov/fdsnws/eve
                  forMagnitudeOf:(NSNumber *)magnitude
                      completion:(EarthquakeDataRequestCompletion)completion
 {
+    NSDictionary *parameters = @{@"starttime" : startDate,
+                                 @"endtime" : endDate,
+                                 @"minmagnitude" : magnitude,
+                                 @"format" : @"geojson"};
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:@"http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2011-12-04&endtime=2014-12-04&minmagnitude=6"
-      parameters:nil
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+
+    [manager GET:EarthquakeBaseQueryAPI
+      parameters:parameters
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
              NSLog(@"JSON: %@", responseObject);
-             
+     
              NSArray *earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:responseObject]];
              if (completion) {
                  completion(earquakesArray);

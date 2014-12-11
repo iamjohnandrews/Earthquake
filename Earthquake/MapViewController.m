@@ -26,10 +26,10 @@
     [super viewDidLoad];
     
     self.networkingManger = [[EarthquakeNetworking alloc] init];
-
+    
     [self.networkingManger fetchEarthquakeDataFrom:[self getDateFromOneYearAgo:[NSDate date]]
                                                 to:[self formateDate:[NSDate date]]
-                                    forMagnitudeOf:[NSNumber numberWithInt:3]
+                                    forMagnitudeOf:[NSNumber numberWithInt:6]
                                         completion:^(NSArray *data) {
                                             self.earthquakeObjectsArray = data;
                                         }];
