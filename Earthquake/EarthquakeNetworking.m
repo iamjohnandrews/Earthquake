@@ -14,6 +14,7 @@ NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/quer
 
 @interface EarthquakeNetworking ()
 @property (strong, nonatomic) AFHTTPSessionManager *session;
+
 @end
 
 @implementation EarthquakeNetworking
@@ -24,8 +25,9 @@ NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/quer
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken,^{
         sharedManager = [[self alloc] init];
-        sharedManager.session = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:EarthquakeAPI]];
+//        sharedManager.session = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:EarthquakeAPI]];
         sharedManager.session.responseSerializer = [AFJSONResponseSerializer serializer];
+        
     });
     
     return sharedManager;
@@ -34,25 +36,17 @@ NSString * const EarthquakeAPI = @"http://comcat.cr.usgs.gov/fdsnws/event/1/quer
 - (NSArray *)fetchEarthquakeDataFrom:(NSString *)startDate to:(NSString *)endDate forMagnitudeOf:(NSNumber *)magnitude
 {
     __block NSArray *earquakesArray;
-
-    NSDictionary *params = @{@"format" : @"geojson",
-                             @"starttime" : startDate,
-                             @"endtime" : endDate,
-                             @"minmagnitude" : magnitude};
     
-    [self.session GET:EarthquakeAPI
-   parameters:params
-      success:^(NSURLSessionDataTask *task, id responseObject) {
-          NSError *jsonError = nil;
-          
-          NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseObject
-                                                                   options:kNilOptions
-                                                                     error:&jsonError];
-          earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:jsonDict]];
-          
-      } failure:^(NSURLSessionDataTask *task, NSError *error) {
-          NSLog(@"%@", [error localizedDescription]);
-      }];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:@"http://comcat.cr.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2011-12-04&endtime=2014-12-04&minmagnitude=6"
+      parameters:nil
+         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+             NSLog(@"JSON: %@", responseObject);
+             
+             earquakesArray = [[NSArray alloc] initWithArray:[self parseEarthquakeResponse:responseObject]];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
     
     return earquakesArray;
 }
